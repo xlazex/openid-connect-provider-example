@@ -1,59 +1,59 @@
 const assert = require('assert')
-const path = require('path')
 const express = require('express')
 const Provider = require('oidc-provider')
+// \Import
 
-const PORT = 8443
-const APP_NAME = 'login'
 
-const mainConfig = require('./config/mainConfig')
+// init and run
+async function construct() {
 
-const providerConfig = require('./config/providerConfig')
+    const mainConfig = require('./config/mainConfig')
+    const providerConfig = require('./config/providerConfig')
+    const providerSettings = require('./config/providerSettings')
+    const keystore = Provider.createKeyStore()
+    const app = express()
 
-const keystore = Provider.createKeyStore();
+    await Promise.all([ //@updates: keystore
+      keystore.generate('RSA', 2048, {
+        alg: 'RS256',
+        kid: 'signing-key',
+        use: 'sig',
+      }),
+      // keystore.generate('RSA', 2048, {
+      //   kid: 'enc-rs-0',
+      //   use: 'enc',
+      // }),
+      // keystore.generate('EC', 'P-256', {
+      //   kid: 'sig-ec2-0',
+      //   use: 'sig',
+      // }),
+      // keystore.generate('EC', 'P-256', {
+      //   kid: 'enc-ec2-0',
+      //   use: 'enc',
+      // }),
+      // keystore.generate('EC', 'P-384', {
+      //   kid: 'sig-ec3-0',
+      //   use: 'sig',
+      // }),
+      // keystore.generate('EC', 'P-384', {
+      //   kid: 'enc-ec3-0',
+      //   use: 'enc',
+      // }),
+      // keystore.generate('EC', 'P-521', {
+      //   kid: 'sig-ec5-0',
+      //   use: 'sig',
+      // }),
+      // keystore.generate('EC', 'P-521', {
+      //   kid: 'enc-ec5-0',
+      //   use: 'enc',
+      // })
+    ])
 
-const providerSettings = require('./config/providerSettings')
+    //keystore.all().forEach(registerKey, this);
 
-async function main() {
+    providerConfig.keystore = keystore.toJSON(true)
 
-    const sig = await Promise.all([
-                  keystore.generate('RSA', 2048, {
-                    kid: 'sig-rs-0',
-                    use: 'sig',
-                  }),
-                  keystore.generate('RSA', 2048, {
-                    kid: 'enc-rs-0',
-                    use: 'enc',
-                  }),
-                  keystore.generate('EC', 'P-256', {
-                    kid: 'sig-ec2-0',
-                    use: 'sig',
-                  }),
-                  keystore.generate('EC', 'P-256', {
-                    kid: 'enc-ec2-0',
-                    use: 'enc',
-                  }),
-                  keystore.generate('EC', 'P-384', {
-                    kid: 'sig-ec3-0',
-                    use: 'sig',
-                  }),
-                  keystore.generate('EC', 'P-384', {
-                    kid: 'enc-ec3-0',
-                    use: 'enc',
-                  }),
-                  keystore.generate('EC', 'P-521', {
-                    kid: 'sig-ec5-0',
-                    use: 'sig',
-                  }),
-                  keystore.generate('EC', 'P-521', {
-                    kid: 'enc-ec5-0',
-                    use: 'enc',
-                  })
-                ])
-
-    providerConfig.keystore = keystore.toJSON()
-
-    console.log('checking keystore', providerConfig.keystore)
+    console.log('OIDCP: KEYSTORE: \n', providerConfig.keystore)
 
     const oidc = new Provider(mainConfig.providerHost, providerConfig)
 
@@ -62,21 +62,18 @@ async function main() {
     oidc.app.proxy = true
     oidc.app.keys = process.env.SECURE_KEY.split(',')
 
-    const app = express()
-    app.set('trust proxy', true)
-    app.set('view engine', 'ejs')
-    app.set('views', path.resolve(__dirname, 'views'))
+    require('./boot')(app, oidc)
 
     require('./route')(app, oidc)
 
-    //use provider's routes (koa)
+    //use @oidc-provider's routes (koa)
     app.use(oidc.callback)
 
     app.listen(mainConfig.appPort)
 
 }
 
-main()
+construct()
   .catch(err => {
     console.error(err);
     const status = err.status ? err.status : 500
