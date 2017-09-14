@@ -8,12 +8,6 @@ console.log("HYYYYKKKKKUUUU+++++STRTDDD++++NMSAOIFDJSAODK")
 // init and run
 async function construct() {
 
-    if (!process.env.HEROKU_APP_NAME && process.env.X_HEROKU_REMOTE) {
-      process.env.X_HEROKU_REMOTE.match(/\.com\/(.+)\.git/);
-      process.env.HEROKU_APP_NAME = RegExp.$1;
-    }
-
-    assert(process.env.HEROKU_APP_NAME, 'process.env.HEROKU_APP_NAME missing');
     assert(process.env.PORT, 'process.env.PORT missing');
     assert(process.env.SECURE_KEY, 'process.env.SECURE_KEY missing, run `heroku addons:create securekey`');
     assert.equal(process.env.SECURE_KEY.split(',').length, 2, 'process.env.SECURE_KEY format invalid');
