@@ -3,6 +3,7 @@ const express = require('express')
 const Provider = require('oidc-provider')
 // \Import
 
+console.log("HYYYYKKKKKUUUU+++++STRTDDD++++NMSAOIFDJSAODK")
 
 // init and run
 async function construct() {
