@@ -13,4 +13,8 @@ module.exports =
       },
     ],
     adapter: RedisAdapter,
+    keys: [
+      '2fi9ugflsiscwcdv3g2aq2v2c2nwam2elripnkjbn1s6n5m6c4',
+      '6c7r6pz375bhltbvt57slj5waqj3fw1t7hc0u8bqwda0sqdth5'
+    ]
   }

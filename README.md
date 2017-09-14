@@ -4,7 +4,7 @@
 
 ### Usage
 * Entry point: ``index.js``
-* Using Nodemon: ``SECURE_KEY=your_secure_key nodemon index.js``
+* Using Nodemon: ``SECURE_KEY=your_secure_key_pair nodemon index.js``
 * Using PM2: ``TODO``
 
 ### Based on

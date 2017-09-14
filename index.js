@@ -7,6 +7,16 @@ const Provider = require('oidc-provider')
 // init and run
 async function construct() {
 
+    if (!process.env.HEROKU_APP_NAME && process.env.X_HEROKU_REMOTE) {
+      process.env.X_HEROKU_REMOTE.match(/\.com\/(.+)\.git/);
+      process.env.HEROKU_APP_NAME = RegExp.$1;
+    }
+
+    assert(process.env.HEROKU_APP_NAME, 'process.env.HEROKU_APP_NAME missing');
+    assert(process.env.PORT, 'process.env.PORT missing');
+    assert(process.env.SECURE_KEY, 'process.env.SECURE_KEY missing, run `heroku addons:create securekey`');
+    assert.equal(process.env.SECURE_KEY.split(',').length, 2, 'process.env.SECURE_KEY format invalid');
+
     const mainConfig = require('./config/mainConfig')
     const providerConfig = require('./config/providerConfig')
     const providerSettings = require('./config/providerSettings')
@@ -19,14 +29,14 @@ async function construct() {
         kid: 'signing-key',
         use: 'sig',
       }),
-      // keystore.generate('RSA', 2048, {
-      //   kid: 'enc-rs-0',
-      //   use: 'enc',
-      // }),
-      // keystore.generate('EC', 'P-256', {
-      //   kid: 'sig-ec2-0',
-      //   use: 'sig',
-      // }),
+      keystore.generate('RSA', 2048, {
+        kid: 'enc-rs-0',
+        use: 'enc',
+      }),
+      keystore.generate('EC', 'P-256', {
+        kid: 'sig-ec2-0',
+        use: 'sig',
+      }),
       // keystore.generate('EC', 'P-256', {
       //   kid: 'enc-ec2-0',
       //   use: 'enc',
@@ -49,18 +59,11 @@ async function construct() {
       // })
     ])
 
-    //keystore.all().forEach(registerKey, this);
-
     providerConfig.keystore = keystore.toJSON(true)
-
-    console.log('OIDCP: KEYSTORE: \n', providerConfig.keystore)
 
     const oidc = new Provider(mainConfig.providerHost, providerConfig)
 
     await oidc.initialize(providerSettings)
-
-    oidc.app.proxy = true
-    oidc.app.keys = process.env.SECURE_KEY.split(',')
 
     require('./boot')(app, oidc)
 
