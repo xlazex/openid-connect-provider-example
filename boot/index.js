@@ -5,7 +5,7 @@ module.exports = (app, oidc) => {
 
   //OpenID Connect Provider
   oidc.app.proxy = true
-  //oidc.app.keys = process.env.SECURE_KEY.split(',')
+  oidc.app.keys = process.env.SECURE_KEY.split(',')
 
   //Application
   app.use(static('public'))
