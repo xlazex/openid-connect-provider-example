@@ -1,1 +1,1 @@
-web: RUN_ENV=heroku APPNAME=irogov node --inspect index.js
+web: node --inspect index.js
