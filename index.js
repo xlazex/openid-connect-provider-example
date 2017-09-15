@@ -3,8 +3,6 @@ const express = require('express')
 const Provider = require('oidc-provider')
 // \Import
 
-console.log("HYYYYKKKKKUUUU+++++STRTDDD++++NMSAOIFDJSAODK")
-
 // init and run
 async function construct() {
 
@@ -18,43 +16,43 @@ async function construct() {
     const keystore = Provider.createKeyStore()
     const app = express()
 
-    await Promise.all([ //@updates: keystore
-      keystore.generate('RSA', 2048, {
-        alg: 'RS256',
-        kid: 'signing-key',
-        use: 'sig',
-      }),
-      keystore.generate('RSA', 2048, {
-        kid: 'enc-rs-0',
-        use: 'enc',
-      }),
-      keystore.generate('EC', 'P-256', {
-        kid: 'sig-ec2-0',
-        use: 'sig',
-      }),
-      // keystore.generate('EC', 'P-256', {
-      //   kid: 'enc-ec2-0',
-      //   use: 'enc',
-      // }),
-      // keystore.generate('EC', 'P-384', {
-      //   kid: 'sig-ec3-0',
-      //   use: 'sig',
-      // }),
-      // keystore.generate('EC', 'P-384', {
-      //   kid: 'enc-ec3-0',
-      //   use: 'enc',
-      // }),
-      // keystore.generate('EC', 'P-521', {
-      //   kid: 'sig-ec5-0',
-      //   use: 'sig',
-      // }),
-      // keystore.generate('EC', 'P-521', {
-      //   kid: 'enc-ec5-0',
-      //   use: 'enc',
-      // })
-    ])
-
-    providerConfig.keystore = keystore.toJSON(true)
+    // await Promise.all([ //@updates: keystore
+    //   keystore.generate('RSA', 2048, {
+    //     alg: 'RS256',
+    //     kid: 'signing-key',
+    //     use: 'sig',
+    //   }),
+    //   keystore.generate('RSA', 2048, {
+    //     kid: 'enc-rs-0',
+    //     use: 'enc',
+    //   }),
+    //   keystore.generate('EC', 'P-256', {
+    //     kid: 'sig-ec2-0',
+    //     use: 'sig',
+    //   }),
+    //   // keystore.generate('EC', 'P-256', {
+    //   //   kid: 'enc-ec2-0',
+    //   //   use: 'enc',
+    //   // }),
+    //   // keystore.generate('EC', 'P-384', {
+    //   //   kid: 'sig-ec3-0',
+    //   //   use: 'sig',
+    //   // }),
+    //   // keystore.generate('EC', 'P-384', {
+    //   //   kid: 'enc-ec3-0',
+    //   //   use: 'enc',
+    //   // }),
+    //   // keystore.generate('EC', 'P-521', {
+    //   //   kid: 'sig-ec5-0',
+    //   //   use: 'sig',
+    //   // }),
+    //   // keystore.generate('EC', 'P-521', {
+    //   //   kid: 'enc-ec5-0',
+    //   //   use: 'enc',
+    //   // })
+    // ])
+    //
+    // providerConfig.keystore = keystore.toJSON(true)
 
     const oidc = new Provider(mainConfig.providerHost, providerConfig)
 
