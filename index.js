@@ -58,12 +58,14 @@ async function construct() {
 
     await oidc.initialize(providerSettings)
 
-    require('./boot')(app, oidc)
-
+    //use @application routes (express)
     require('./route')(app, oidc)
 
     //use @oidc-provider's routes (koa)
     app.use(oidc.callback)
+
+    //configuring @application
+    require('./boot')(app, oidc)
 
     app.listen(mainConfig.appPort)
 

@@ -9,6 +9,7 @@
     "body-parser": "^1.17.1",
     "ejs": "^2.5.6",
     "express": "^4.15.2",
+    "express-static": "^1.2.4",
     "express-urlrewrite": "^1.2.0",
     "generate-rsa-keypair": "^0.1.1",
     "ioredis": "^3.0.0",
