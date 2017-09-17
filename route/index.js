@@ -4,7 +4,7 @@ const parse = bodyParser.urlencoded({ extended: false })
 module.exports = (app, oidc) => {
 
     app.get('/', async (req, res) => {
-      res.send({hi: 'hi'})
+      res.render('index')
     })
 
     /**
