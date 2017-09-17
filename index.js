@@ -18,43 +18,43 @@ async function construct() {
     const keystore = Provider.createKeyStore()
     const app = express()
 
-    await Promise.all([ //@updates: keystore
-      keystore.generate('RSA', 2048, {
-        alg: 'RS256',
-        kid: 'signing-key',
-        use: 'sig',
-      }),
-      keystore.generate('RSA', 2048, {
-        kid: 'enc-rs-0',
-        use: 'enc',
-      }),
-      keystore.generate('EC', 'P-256', {
-        kid: 'sig-ec2-0',
-        use: 'sig',
-      }),
-      // keystore.generate('EC', 'P-256', {
-      //   kid: 'enc-ec2-0',
-      //   use: 'enc',
-      // }),
-      // keystore.generate('EC', 'P-384', {
-      //   kid: 'sig-ec3-0',
-      //   use: 'sig',
-      // }),
-      // keystore.generate('EC', 'P-384', {
-      //   kid: 'enc-ec3-0',
-      //   use: 'enc',
-      // }),
-      // keystore.generate('EC', 'P-521', {
-      //   kid: 'sig-ec5-0',
-      //   use: 'sig',
-      // }),
-      // keystore.generate('EC', 'P-521', {
-      //   kid: 'enc-ec5-0',
-      //   use: 'enc',
-      // })
-    ])
+    // await Promise.all([ //@updates: keystore
+    //   keystore.generate('RSA', 2048, {
+    //     alg: 'RS256',
+    //     kid: 'signing-key',
+    //     use: 'sig',
+    //   }),
+    //   keystore.generate('RSA', 2048, {
+    //     kid: 'enc-rs-0',
+    //     use: 'enc',
+    //   }),
+    //   keystore.generate('EC', 'P-256', {
+    //     kid: 'sig-ec2-0',
+    //     use: 'sig',
+    //   }),
+    //   // keystore.generate('EC', 'P-256', {
+    //   //   kid: 'enc-ec2-0',
+    //   //   use: 'enc',
+    //   // }),
+    //   // keystore.generate('EC', 'P-384', {
+    //   //   kid: 'sig-ec3-0',
+    //   //   use: 'sig',
+    //   // }),
+    //   // keystore.generate('EC', 'P-384', {
+    //   //   kid: 'enc-ec3-0',
+    //   //   use: 'enc',
+    //   // }),
+    //   // keystore.generate('EC', 'P-521', {
+    //   //   kid: 'sig-ec5-0',
+    //   //   use: 'sig',
+    //   // }),
+    //   // keystore.generate('EC', 'P-521', {
+    //   //   kid: 'enc-ec5-0',
+    //   //   use: 'enc',
+    //   // })
+    // ])
 
-    fs.writeFileSync(path.resolve('json/keystore.json'), JSON.stringify(keystore.toJSON(true), null, 2))
+    //fs.writeFileSync(path.resolve('json/keystore.json'), JSON.stringify(keystore.toJSON(true), null, 2))
 
     const ks = require('./json/keystore.json');
 
@@ -73,7 +73,9 @@ async function construct() {
     //configuring @application
     require('./boot')(app, oidc)
 
-    app.listen(mainConfig.appPort)
+    app.listen(mainConfig.appPort, ()=>{
+      console.log('Listening on port:', mainConfig.appPort)
+    })
 
 }
 
