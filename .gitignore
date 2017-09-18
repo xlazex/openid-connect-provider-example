@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+# JSON keystore
+json/keystore.json
