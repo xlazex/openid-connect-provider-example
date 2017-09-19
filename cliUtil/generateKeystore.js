@@ -2,24 +2,53 @@ const Provider = require('oidc-provider')
 const keystore = Provider.createKeyStore()
 const fs = require('fs')
 const path = require('path')
+//\ Import
 
 const consolePrefix = 'OIDCP/generateKeystore: '
+const JSON_DIR = 'json'
+const JSON_FILE = 'keystore.json'
 
-const progressTimer = (function() {
-  const L = ["\\", "|", "/", "-"]
-  const P = ["[__[]__]", "[_[__]_]", "[_[__]_]", "[__[]__]"]
-  var x = 0
-  return setInterval(function() {
-    process.stdout.write(`\r${consolePrefix} Generating: ${P[x++]}`)
-    x &= 3
-  }, 250)
-})()
+function checkDir( jsonDir = 'json' ){
+
+  return new Promise(function(resolve, reject) {
+    fs.exists(jsonDir, (exists) => {
+      resolve(exists)
+    })
+  })
+
+}
+
+function createDir( jsonDir = 'json' ){
+
+  return new Promise(function(resolve, reject) {
+    fs.mkdir(jsonDir, (err) => {
+      if(!!err){ reject(err) }
+      resolve(true)
+    })
+  })
+
+}
+
+
+function writeDataToFile( jsonDir = 'json', jsonFile = 'keystore.json', data = {} ){
+
+  const jsonFilePath = path.resolve(jsonDir, jsonFile)
+
+  return new Promise(function(resolve, reject) {
+    fs.writeFile(jsonFilePath, data, (err) => {
+        if(!!err){ reject(err) }
+        resolve({ status: true, file: jsonFilePath })
+      })
+  })
+
+}
 
 async function construct() {
 
   console.log(`${consolePrefix}`, 'Starting...')
 
-  await Promise.all([ //@updates: keystore
+  // Generate keys
+  await Promise.all([
     keystore.generate('RSA', 2048, {
       alg: 'RS256',
       kid: 'signing-key',
@@ -54,29 +83,43 @@ async function construct() {
       use: 'enc',
     })
   ])
-
   clearInterval(progressTimer)
-
   console.log(`\n${consolePrefix}`, 'Keys generated: \n', keystore.all())
 
-  // Kind of callback hell implementation
-  fs.exists('json/keystore.json', (exists) => {
-    if(!exists){
-      console.log(`\n${consolePrefix}`, 'File not exists. Creating..')
-    }
-    fs.writeFile(path.resolve('json/keystore.json'), JSON.stringify(keystore.toJSON(true), null, 2), (err) => {
-      if(!!err) {
-        console.log(`\n${consolePrefix}`, 'Not saved \n', err)
-      } else {
-        console.log(`\n${consolePrefix}`, 'Saved to file: ', '\"json/keystore.json\"')
-      }
-      console.log(`${consolePrefix}`, 'Bye.')
-    })
-  })
+  const isDirExists = await checkDir(JSON_DIR)
+  if(!isDirExists){
+    console.log(`\n${consolePrefix}`, 'JSON dir not exists. Creating..')
+    const isDirCreated = await createDir(JSON_DIR)
+    console.log(`${consolePrefix}`, `JSON dir ${ !isDirCreated ? 'not' : '' } created.`)
+  }
+
+  console.log(`\n${consolePrefix}`, 'Writing keystore to file..')
+  const keystoreJSON = JSON.stringify(keystore.toJSON(true), null, 2)
+  const isDataWritten = await writeDataToFile( JSON_DIR, JSON_FILE, keystoreJSON )
+  if(isDataWritten) {
+    console.log(`${consolePrefix}`, 'All keys are saved..')
+  } else {
+    console.log(`${consolePrefix}`, 'Some problems with writing data to file..')
+  }
+
+  console.log(`${consolePrefix}`, 'Bye..')
 
 }
+//\ Declaration
+
+
+const progressTimer = (function() {
+  const L = ["\\", "|", "/", "-"]
+  const P = ["[__[]__]", "[_[__]_]", "[_[__]_]", "[__[]__]"]
+  var x = 0
+  return setInterval(function() {
+    process.stdout.write(`\r${consolePrefix} Generating: ${P[x++]}`)
+    x &= 3
+  }, 250)
+})()
 
 construct()
   .catch(err => {
     console.error(`\n${consolePrefix}`, 'Error: ', err);
   })
+//\ Execution
