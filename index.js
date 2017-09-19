@@ -3,6 +3,16 @@ const express = require('express')
 const Provider = require('oidc-provider')
 // \Import
 
+function checkDir( jsonDir = 'json' ){
+
+  return new Promise(function(resolve, reject) {
+    fs.exists(jsonDir, (exists) => {
+      resolve(exists)
+    })
+  })
+
+}
+
 // init and run
 async function construct() {
 
@@ -15,7 +25,12 @@ async function construct() {
     const providerSettings = require('./config/providerSettings')
     const app = express()
 
-    const ks = require('/app/json/keystore.json');
+    console.log('check json dir', await checkDir())
+    console.log('check json dir json/keystore.json', await checkDir('json/keystore.json'))
+    console.log('check json dir /app/json/keystore.json', await checkDir('/app/json/keystore.json'))
+    console.log('check json dir ./json/keystore.json', await checkDir('./json/keystore.json'))
+
+    const ks = require('json/keystore.json');
 
     providerConfig.keystore = ks
 
