@@ -15,7 +15,7 @@ async function construct() {
     const providerSettings = require('./config/providerSettings')
     const app = express()
 
-    const ks = require('./json/keystore.json');
+    const ks = require('json/keystore.json');
 
     providerConfig.keystore = ks
 

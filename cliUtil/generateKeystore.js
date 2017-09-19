@@ -34,6 +34,8 @@ function writeDataToFile( jsonDir = 'json', jsonFile = 'keystore.json', data = {
 
   const jsonFilePath = path.resolve(jsonDir, jsonFile)
 
+  console.log(`\n${consolePrefix}`, 'JSON filepath:', jsonFilePath)
+
   return new Promise(function(resolve, reject) {
     fs.writeFile(jsonFilePath, data, (err) => {
         if(!!err){ reject(err) }
@@ -90,7 +92,7 @@ async function construct() {
   if(!isDirExists){
     console.log(`\n${consolePrefix}`, 'JSON dir not exists. Creating..')
     const isDirCreated = await createDir(JSON_DIR)
-    console.log(`${consolePrefix}`, `JSON dir ${ !isDirCreated ? 'not' : '' } created.`)
+    console.log(`${consolePrefix}`, `JSON dir ${ !isDirCreated ? 'not ' : ' ' }created.`)
   }
 
   console.log(`\n${consolePrefix}`, 'Writing keystore to file..')
