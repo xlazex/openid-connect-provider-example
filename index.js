@@ -29,7 +29,6 @@ async function construct() {
     console.log('check json dir json/keystore.json', await checkDir('json/keystore.json'))
     console.log('check json dir /app/json/keystore.json', await checkDir('/app/json/keystore.json'))
     console.log('check json dir ./json/keystore.json', await checkDir('./json/keystore.json'))
-
     const ks = require('json/keystore.json');
 
     providerConfig.keystore = ks
