@@ -59,10 +59,20 @@ async function construct() {
 
   console.log(`\n${consolePrefix}`, 'Keys generated: \n', keystore.all())
 
-  fs.writeFileSync(path.resolve('json/keystore.json'), JSON.stringify(keystore.toJSON(true), null, 2))
-
-  console.log(`\n${consolePrefix}`, 'Saved to file: ', '\"json/keystore.json\"')
-  console.log(`${consolePrefix}`, 'Bye.')
+  // Kind of callback hell implementation
+  fs.exists('json/keystore.json', (exists) => {
+    if(!exists){
+      console.log(`\n${consolePrefix}`, 'File not exists. Creating..')
+    }
+    fs.writeFile(path.resolve('json/keystore.json'), JSON.stringify(keystore.toJSON(true), null, 2), (err) => {
+      if(!!err) {
+        console.log(`\n${consolePrefix}`, 'Not saved \n', err)
+      } else {
+        console.log(`\n${consolePrefix}`, 'Saved to file: ', '\"json/keystore.json\"')
+      }
+      console.log(`${consolePrefix}`, 'Bye.')
+    })
+  })
 
 }
 
