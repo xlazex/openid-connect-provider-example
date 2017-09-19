@@ -32,7 +32,7 @@ function createDir( jsonDir = 'json' ){
 
 function writeDataToFile( jsonDir = '/json/', jsonFile = 'keystore.json', data = {} ){
 
-  const jsonFilePath = path.join(__dirname, jsonDir, jsonFile)
+  const jsonFilePath = path.join(__dirname, '..', jsonDir, jsonFile)
 
   console.log(`\n${consolePrefix}`, 'JSON filepath:', jsonFilePath)
 
