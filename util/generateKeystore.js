@@ -8,6 +8,7 @@ const consolePrefix = 'OIDCP/generateKeystore: '
 const JSON_DIR = 'json'
 const JSON_FILE = 'keystore.json'
 
+//TODO: move to util/pathOps
 function checkDir( jsonDir = 'json' ){
 
   return new Promise(function(resolve, reject) {
@@ -18,6 +19,7 @@ function checkDir( jsonDir = 'json' ){
 
 }
 
+//TODO: move to util/pathOps
 function createDir( jsonDir = 'json' ){
 
   return new Promise(function(resolve, reject) {
@@ -29,7 +31,7 @@ function createDir( jsonDir = 'json' ){
 
 }
 
-
+//TODO: move to util/pathOps
 function writeDataToFile( jsonDir = '/json/', jsonFile = 'keystore.json', data = {} ){
 
   const jsonFilePath = path.join(__dirname, '..', jsonDir, jsonFile)
@@ -48,6 +50,16 @@ function writeDataToFile( jsonDir = '/json/', jsonFile = 'keystore.json', data =
 async function construct() {
 
   console.log(`${consolePrefix}`, 'Starting...')
+
+  const progressTimer = (function() {
+    const L = ["\\", "|", "/", "-"]
+    const P = ["[__[]__]", "[_[__]_]", "[_[__]_]", "[__[]__]"]
+    var x = 0
+    return setInterval(function() {
+      process.stdout.write(`\r${consolePrefix} Generating: ${P[x++]}`)
+      x &= 3
+    }, 250)
+  })()
 
   // Generate keys
   await Promise.all([
@@ -109,19 +121,10 @@ async function construct() {
 }
 //\ Declaration
 
+module.exports = construct
 
-const progressTimer = (function() {
-  const L = ["\\", "|", "/", "-"]
-  const P = ["[__[]__]", "[_[__]_]", "[_[__]_]", "[__[]__]"]
-  var x = 0
-  return setInterval(function() {
-    process.stdout.write(`\r${consolePrefix} Generating: ${P[x++]}`)
-    x &= 3
-  }, 250)
-})()
-
-construct()
-  .catch(err => {
-    console.error(`\n${consolePrefix}`, 'Error: ', err);
-  })
+// construct()
+//   .catch(err => {
+//     console.error(`\n${consolePrefix}`, 'Error: ', err);
+//   })
 //\ Execution

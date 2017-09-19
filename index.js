@@ -3,6 +3,7 @@ const express = require('express')
 const Provider = require('oidc-provider')
 const fs = require('fs')
 const path = require('path')
+const generateKeystore = require('./util/generateKeystore')
 // \Import
 
 function checkDir( jsonDir = 'json' ){
@@ -27,11 +28,11 @@ async function construct() {
     const providerSettings = require('./config/providerSettings')
     const app = express()
 
-    console.log('check json dir', await checkDir())
-    console.log('check json dir json/keystore.json', await checkDir('json/keystore.json'))
-    console.log('check json dir /app/json/keystore.json', await checkDir('/app/json/keystore.json'))
-    console.log('check json dir ./json/keystore.json', await checkDir('./json/keystore.json'))
-    const ks = require('json/keystore.json');
+    await generateKeystore()
+      .catch(err => {
+        console.error('OIDCP/generateKeystore: Error: ', err);
+      })
+    const ks = require('./json/keystore.json');
 
     providerConfig.keystore = ks
 
