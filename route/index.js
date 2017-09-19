@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser')
 const parse = bodyParser.urlencoded({ extended: false })
+const Account = require('../model/account')
 
 module.exports = (app, oidc) => {
 
