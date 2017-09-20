@@ -1,4 +1,6 @@
-const RedisAdapter = require('../adapter/redisAdapter');
+const RedisAdapter = require('../adapter/redisAdapter')
+const MongoAdapter = require('../adapter/mongoAdapter')
+
 
 module.exports =
   {
